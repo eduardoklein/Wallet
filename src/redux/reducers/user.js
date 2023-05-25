@@ -1,11 +1,13 @@
 // Esse reducer será responsável por tratar as informações da pessoa usuária
+import { ADD_EMAIL } from '../actions/actionTypes';
+
 const INITIAL_STATE = {
   email: '',
 };
 
 export const user = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case 'ADD_EMAIL':
+  case ADD_EMAIL:
     return {
       ...state,
       email: action.email,

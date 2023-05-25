@@ -1,4 +1,4 @@
-const ADD_EMAIL = 'ADD_EMAIL';
+import { ADD_EMAIL } from './actionTypes';
 
 export const addEmail = (email) => {
   console.log(email);
