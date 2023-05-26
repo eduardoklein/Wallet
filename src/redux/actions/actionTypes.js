@@ -1,2 +1,4 @@
 export const ADD_EMAIL = 'ADD_EMAIL';
 export const STORE_FETCHED_CURRENCIES = 'STORE_FETCHED_CURRENCIES';
+export const EXPENSE_ARRAY = 'EXPENSE_ARRAY';
+export const ATT_TOTAL = 'ATT_TOTAL';

@@ -2,9 +2,17 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import store from '../redux/store';
-import { fetchCurrencies } from '../redux/actions';
+import { fetchCurrencies, fetchExchangeRate } from '../redux/actions';
 
 class WalletForm extends Component {
+  constructor() {
+    super();
+    this.state = {
+      value: '',
+      description: '',
+    };
+  }
+
   async componentDidMount() {
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
     const data = await response.json();
@@ -13,30 +21,94 @@ class WalletForm extends Component {
     store.dispatch(fetchCurrencies(dataCodes));
   }
 
+  handleOnChange = ({ target }) => {
+    const { id } = target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    if (Number(value)) {
+      this.setState(() => ({ [id]: Number(value) }));
+    } else {
+      this.setState(() => ({ [id]: value }));
+    }
+  };
+
+  handleOnClick = (event) => {
+    event.preventDefault();
+    const { expenses } = this.props;
+    const { value, description } = this.state;
+    console.log(typeof value);
+    const selectedCurrency = document.getElementById('currencies').value;
+    const method = document.getElementById('payment').value;
+    const tag = document.getElementById('expenseType').value;
+    const expense = {
+      id: expenses.length,
+      value,
+      description,
+      currency: selectedCurrency,
+      method,
+      tag,
+    };
+    store.dispatch(fetchExchangeRate(expense));
+    this.setState(() => ({
+      value: '',
+      description: '',
+    }));
+  };
+
   render() {
     const { currenciesObj } = this.props;
-    console.log(currenciesObj);
+    const { value, description } = this.state;
     return (
       <div>
-        <p data-testid="value-input">Value</p>
-        <p data-testid="description-input">Description</p>
         <form>
-          <label htmlFor="currencies">Currencies: </label>
-          <select data-testid="currency-input" id="currencies" name="currencies">
+          <label htmlFor="value">Valor: </label>
+          <input
+            data-testid="value-input"
+            onChange={ this.handleOnChange }
+            id="value"
+            type="number"
+            value={ value }
+          />
+          <label
+            htmlFor="description"
+          >
+            Descricão:
+            {' '}
+
+          </label>
+          <input
+            data-testid="description-input"
+            onChange={ this.handleOnChange }
+            id="description"
+            type="text"
+            value={ description }
+          />
+          <label
+            htmlFor="currencies"
+          >
+            Currencies:
+            {' '}
+
+          </label>
+          <select
+            data-testid="currency-input"
+            id="currencies"
+            name="currencies"
+          >
             { currenciesObj.map((c) => <option key={ c }>{c}</option>) }
           </select>
-          <select data-testid="method-input">
+          <select data-testid="method-input" id="payment">
             <option>Dinheiro</option>
             <option>Cartão de crédito</option>
             <option>Cartão de débito</option>
           </select>
-          <select data-testid="tag-input">
+          <select data-testid="tag-input" id="expenseType">
             <option>Alimentação</option>
             <option>Lazer</option>
             <option>Trabalho</option>
             <option>Transporte</option>
             <option>Saúde</option>
           </select>
+          <button onClick={ this.handleOnClick }>Adicionar despesa</button>
         </form>
       </div>
     );
@@ -44,11 +116,17 @@ class WalletForm extends Component {
 }
 
 WalletForm.propTypes = {
-  currenciesObj: PropTypes.shape.isRequired,
+  currenciesObj: PropTypes.shape({
+    map: PropTypes.func,
+  }).isRequired,
+  expenses: PropTypes.shape({
+    length: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 const mapStateToProps = ({ wallet }) => ({
   currenciesObj: wallet.currencies,
+  expenses: wallet.expenses,
 });
 
 export default connect(mapStateToProps)(WalletForm);
