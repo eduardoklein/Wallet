@@ -25,7 +25,6 @@ class Login extends React.Component {
   handleOnClick = (event) => {
     const { history } = this.props;
     const emailInput = document.getElementById('email');
-    console.log(emailInput.value);
     store.dispatch(addEmail(emailInput.value));
     emailInput.value = '';
     event.preventDefault();

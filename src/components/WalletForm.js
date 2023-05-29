@@ -94,7 +94,7 @@ class WalletForm extends Component {
             id="currencies"
             name="currencies"
           >
-            { currenciesObj.map((c) => <option key={ c }>{c}</option>) }
+            { currenciesObj.map((c) => <option key={ c } value={ c }>{c}</option>) }
           </select>
           <select data-testid="method-input" id="payment">
             <option>Dinheiro</option>
