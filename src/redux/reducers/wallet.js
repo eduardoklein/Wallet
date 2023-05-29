@@ -10,7 +10,7 @@ const INITIAL_STATE = {
   expenses: [],
   editor: false,
   idToEdit: 0,
-  totalExpenses: '',
+  totalExpenses: '0',
 };
 
 export const wallet = (state = INITIAL_STATE, action) => {
