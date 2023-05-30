@@ -3,11 +3,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
 import WalletForm from '../components/WalletForm';
+import store from '../redux/store';
+import { deleteExpense } from '../redux/actions';
 
 class Wallet extends React.Component {
+  handleOnClick = (id, value) => {
+    store.dispatch(deleteExpense(id, value));
+  };
+
   render() {
     const { expensesArray } = this.props;
-    console.log(expensesArray);
     return (
       <div>
         <Header />
@@ -43,10 +48,19 @@ class Wallet extends React.Component {
                     .toFixed(2)}
                 </td>
                 <td>Real</td>
-                <button>Editar</button>
-                <button>Excluir</button>
-                {/* Voce tem esses valores dentro do expenses em exchangeRates
-  */}
+                <td>
+                  <button>Editar</button>
+                  <button
+                    data-testid="delete-btn"
+                    onClick={ () => this.handleOnClick(
+                      element.id,
+                      (element.value * element.exchangeRates[element.currency].ask)
+                        .toFixed(2),
+                    ) }
+                  >
+                    Excluir
+                  </button>
+                </td>
               </tr>
             )) }
           </tbody>

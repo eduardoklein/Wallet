@@ -3,7 +3,8 @@
 import {
   STORE_FETCHED_CURRENCIES,
   EXPENSE_ARRAY,
-  ATT_TOTAL } from '../actions/actionTypes';
+  ATT_TOTAL,
+  DELETE_EXPENSE } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -37,6 +38,18 @@ export const wallet = (state = INITIAL_STATE, action) => {
     const newTotalExpenses = Number(state.totalExpenses) + Number(action.value);
     return {
       ...state,
+      totalExpenses: newTotalExpenses.toFixed(2),
+    };
+  }
+  case DELETE_EXPENSE: {
+    const newTotalExpenses = Number(state.totalExpenses) - Number(action.value);
+    console.log(newTotalExpenses);
+    console.log(action.value);
+    console.log(state.totalExpenses);
+    const arrayAfterDeletion = state.expenses.filter((exp) => exp.id !== action.id);
+    return {
+      ...state,
+      expenses: arrayAfterDeletion,
       totalExpenses: newTotalExpenses.toFixed(2),
     };
   }

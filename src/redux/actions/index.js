@@ -2,7 +2,8 @@ import {
   ADD_EMAIL,
   STORE_FETCHED_CURRENCIES,
   EXPENSE_ARRAY,
-  ATT_TOTAL } from './actionTypes';
+  ATT_TOTAL,
+  DELETE_EXPENSE } from './actionTypes';
 
 export const addEmail = (email) => ({
   type: ADD_EMAIL,
@@ -21,6 +22,12 @@ export const expenseArray = (arrayInfo) => ({
 
 export const attTotal = (value) => ({
   type: ATT_TOTAL,
+  value,
+});
+
+export const deleteExpense = (id, value) => ({
+  type: DELETE_EXPENSE,
+  id,
   value,
 });
 

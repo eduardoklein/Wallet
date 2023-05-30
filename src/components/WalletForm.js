@@ -10,6 +10,7 @@ class WalletForm extends Component {
     this.state = {
       value: '',
       description: '',
+      idCounter: 0,
     };
   }
 
@@ -33,14 +34,12 @@ class WalletForm extends Component {
 
   handleOnClick = (event) => {
     event.preventDefault();
-    const { expenses } = this.props;
-    const { value, description } = this.state;
-    console.log(typeof value);
+    const { value, description, idCounter } = this.state;
     const selectedCurrency = document.getElementById('currencies').value;
     const method = document.getElementById('payment').value;
     const tag = document.getElementById('expenseType').value;
     const expense = {
-      id: expenses.length,
+      id: idCounter,
       value,
       description,
       currency: selectedCurrency,
@@ -51,6 +50,7 @@ class WalletForm extends Component {
     this.setState(() => ({
       value: '',
       description: '',
+      idCounter: idCounter + 1,
     }));
   };
 
