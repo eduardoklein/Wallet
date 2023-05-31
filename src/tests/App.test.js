@@ -16,6 +16,7 @@ describe('Testa tela de Login', () => {
       name: /entrar/i,
     });
     expect(loginButton).toBeInTheDocument();
+    expect(loginButton).toBeDisabled();
     userEvent.type(loginInputs, 'email@email.com');
     userEvent.type(passwordInput, '123456');
     userEvent.click(loginButton);
@@ -39,10 +40,12 @@ describe('Testa tela de Login', () => {
     expect(methodInput).toBeInTheDocument();
     const tagInput = screen.getByTestId('tag-input');
     expect(tagInput).toBeInTheDocument();
-    const addExpense = screen.getByRole('button', /entrar/i);
+    const addExpense = screen.getByRole('button', { name: /adicionar despesa/i });
     expect(addExpense).toBeInTheDocument();
     userEvent.type(valueInput, '45');
     userEvent.type(descriptionInput, 'Compras');
     userEvent.click(addExpense);
+    const tableExpenses = screen.getByRole('table');
+    expect(tableExpenses).toBeInTheDocument();
   });
 });

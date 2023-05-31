@@ -12,8 +12,7 @@ class Wallet extends React.Component {
     store.dispatch(deleteExpense(id, value));
   };
 
-  handleOnClickEdit = (event, id) => {
-    event.preventDefault();
+  handleOnClickEdit = (id) => {
     store.dispatch(showEditForm(true));
     store.dispatch(idToEdit(id));
   };
@@ -58,7 +57,7 @@ class Wallet extends React.Component {
                 <td>
                   <button
                     data-testid="edit-btn"
-                    onClick={ () => this.handleOnClickEdit(event, element.id) }
+                    onClick={ () => this.handleOnClickEdit(element.id) }
                   >
                     Editar
 
