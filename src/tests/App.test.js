@@ -1,11 +1,30 @@
-import { screen } from '@testing-library/react';
+import { screen, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
 import App from '../App';
+import mockData from './helpers/mockData';
+
+beforeEach(() => {
+  jest.spyOn(global, 'fetch');
+  global.fetch.mockResolvedValue({
+    json: jest.fn().mockResolvedValue(mockData),
+  });
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+const initialState = {
+  wallet: {
+    currencies: [],
+    expenses: [],
+  },
+};
 
 describe('Testa tela de Login', () => {
-  renderWithRouterAndRedux(<App />);
-  it('Testa tela de Login', () => {
+  renderWithRouterAndRedux(<App />, { initialState });
+  it('Testa tela de Login', async () => {
     const loginInputs = screen.getByRole('textbox', {
       name: /e-mail:/i,
     });
@@ -17,14 +36,14 @@ describe('Testa tela de Login', () => {
     });
     expect(loginButton).toBeInTheDocument();
     expect(loginButton).toBeDisabled();
-    userEvent.type(loginInputs, 'email@email.com');
-    userEvent.type(passwordInput, '123456');
-    userEvent.click(loginButton);
+    act(() => {
+      userEvent.type(loginInputs, 'email@email.com');
+      userEvent.type(passwordInput, '1234567');
+      userEvent.click(loginButton);
+    });
     expect(window.location.pathname).toBe('/carteira');
-  });
-  it('Testa tela da Carteira', () => {
-    renderWithRouterAndRedux(<App />);
     const emailHeader = screen.getByTestId('email-field');
+    expect(fetch).toHaveBeenCalledWith('https://economia.awesomeapi.com.br/json/all');
     expect(emailHeader).toBeInTheDocument();
     const brl = screen.getByRole('heading', {
       name: /brl/i,
@@ -42,10 +61,14 @@ describe('Testa tela de Login', () => {
     expect(tagInput).toBeInTheDocument();
     const addExpense = screen.getByRole('button', { name: /adicionar despesa/i });
     expect(addExpense).toBeInTheDocument();
-    userEvent.type(valueInput, '45');
-    userEvent.type(descriptionInput, 'Compras');
-    userEvent.click(addExpense);
-    const tableExpenses = screen.getByRole('table');
-    expect(tableExpenses).toBeInTheDocument();
+    act(() => {
+      userEvent.type(valueInput, '45');
+      userEvent.type(descriptionInput, 'Xablau');
+      // userEvent.selectOptions(currencyInput, 'USD');
+      userEvent.selectOptions(methodInput, 'Dinheiro');
+      userEvent.selectOptions(tagInput, 'Trabalho');
+      userEvent.click(addExpense);
+    });
+    userEvent.click(await screen.findByRole('button', { name: /editar/i }));
   });
 });
