@@ -4,19 +4,26 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 import WalletForm from '../components/WalletForm';
 import store from '../redux/store';
-import { deleteExpense } from '../redux/actions';
+import { deleteExpense, showEditForm, idToEdit } from '../redux/actions';
+import EditForm from '../components/EditForm';
 
 class Wallet extends React.Component {
   handleOnClick = (id, value) => {
     store.dispatch(deleteExpense(id, value));
   };
 
+  handleOnClickEdit = (event, id) => {
+    event.preventDefault();
+    store.dispatch(showEditForm(true));
+    store.dispatch(idToEdit(id));
+  };
+
   render() {
-    const { expensesArray } = this.props;
+    const { expensesArray, showEditF } = this.props;
     return (
       <div>
         <Header />
-        <WalletForm />
+        {showEditF ? <EditForm /> : <WalletForm />}
         <table>
           <thead>
             <tr>
@@ -49,7 +56,13 @@ class Wallet extends React.Component {
                 </td>
                 <td>Real</td>
                 <td>
-                  <button>Editar</button>
+                  <button
+                    data-testid="edit-btn"
+                    onClick={ () => this.handleOnClickEdit(event, element.id) }
+                  >
+                    Editar
+
+                  </button>
                   <button
                     data-testid="delete-btn"
                     onClick={ () => this.handleOnClick(
@@ -71,11 +84,15 @@ class Wallet extends React.Component {
 }
 
 Wallet.propTypes = {
-  expensesArray: PropTypes.shape().isRequired,
+  expensesArray: PropTypes.shape({
+    map: PropTypes.func,
+  }).isRequired,
+  showEditF: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ wallet }) => ({
   expensesArray: wallet.expenses,
+  showEditF: wallet.showEditForm,
 });
 
 export default connect(mapStateToProps)(Wallet);

@@ -3,3 +3,7 @@ export const STORE_FETCHED_CURRENCIES = 'STORE_FETCHED_CURRENCIES';
 export const EXPENSE_ARRAY = 'EXPENSE_ARRAY';
 export const ATT_TOTAL = 'ATT_TOTAL';
 export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+export const EDIT_EXPENSE = 'EDIT_EXPENSE';
+export const SHOW_EDIT_FORM = 'SHOW_EDIT_FORM';
+export const ID_TO_EDIT = 'ID_TO_EDIT';
+export const HANDLE_EDIT = 'HANDLE_EDIT';

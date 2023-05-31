@@ -2,7 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import store from '../redux/store';
-import { fetchCurrencies, fetchExchangeRate } from '../redux/actions';
+import {
+  fetchCurrencies,
+  fetchExchangeRate,
+  showEditForm,
+  handleEdit,
+  attTotal } from '../redux/actions';
 
 class WalletForm extends Component {
   constructor() {
@@ -32,7 +37,7 @@ class WalletForm extends Component {
     }
   };
 
-  handleOnClick = (event) => {
+  handleOnClick = async (event) => {
     event.preventDefault();
     const { value, description, idCounter } = this.state;
     const selectedCurrency = document.getElementById('currencies').value;
@@ -46,16 +51,37 @@ class WalletForm extends Component {
       method,
       tag,
     };
-    store.dispatch(fetchExchangeRate(expense));
+    await store.dispatch(fetchExchangeRate(expense));
     this.setState(() => ({
       value: '',
       description: '',
       idCounter: idCounter + 1,
     }));
+    store.dispatch(attTotal());
+  };
+
+  handleEditClick = (event) => {
+    event.preventDefault();
+    const { id } = this.props;
+    const { value, description } = this.state;
+    const selectedCurrency = document.getElementById('currencies').value;
+    const method = document.getElementById('payment').value;
+    const tag = document.getElementById('expenseType').value;
+    const expense = {
+      id,
+      value,
+      description,
+      currency: selectedCurrency,
+      method,
+      tag,
+    };
+    store.dispatch(handleEdit(expense));
+    store.dispatch(showEditForm(false));
+    store.dispatch(attTotal());
   };
 
   render() {
-    const { currenciesObj } = this.props;
+    const { currenciesObj, typeButton } = this.props;
     const { value, description } = this.state;
     return (
       <div>
@@ -108,7 +134,9 @@ class WalletForm extends Component {
             <option>Transporte</option>
             <option>Saúde</option>
           </select>
-          <button onClick={ this.handleOnClick }>Adicionar despesa</button>
+          {typeButton === 'editar'
+            ? <button onClick={ this.handleEditClick }>Editar despesa</button>
+            : <button onClick={ this.handleOnClick }>Adicionar despesa</button>}
         </form>
       </div>
     );
@@ -122,11 +150,14 @@ WalletForm.propTypes = {
   expenses: PropTypes.shape({
     length: PropTypes.number.isRequired,
   }).isRequired,
+  id: PropTypes.string.isRequired,
+  typeButton: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = ({ wallet }) => ({
   currenciesObj: wallet.currencies,
   expenses: wallet.expenses,
+  id: wallet.idToEdit,
 });
 
 export default connect(mapStateToProps)(WalletForm);

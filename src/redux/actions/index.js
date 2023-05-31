@@ -3,7 +3,11 @@ import {
   STORE_FETCHED_CURRENCIES,
   EXPENSE_ARRAY,
   ATT_TOTAL,
-  DELETE_EXPENSE } from './actionTypes';
+  DELETE_EXPENSE,
+  EDIT_EXPENSE,
+  SHOW_EDIT_FORM,
+  ID_TO_EDIT,
+  HANDLE_EDIT } from './actionTypes';
 
 export const addEmail = (email) => ({
   type: ADD_EMAIL,
@@ -20,9 +24,8 @@ export const expenseArray = (arrayInfo) => ({
   arrayInfo,
 });
 
-export const attTotal = (value) => ({
+export const attTotal = () => ({
   type: ATT_TOTAL,
-  value,
 });
 
 export const deleteExpense = (id, value) => ({
@@ -31,14 +34,31 @@ export const deleteExpense = (id, value) => ({
   value,
 });
 
+export const editExpense = (id) => ({
+  type: EDIT_EXPENSE,
+  id,
+});
+
+export const showEditForm = (boolean) => ({
+  type: SHOW_EDIT_FORM,
+  boolean,
+});
+
+export const idToEdit = (id) => ({
+  type: ID_TO_EDIT,
+  id,
+});
+
+export const handleEdit = (expense) => ({
+  type: HANDLE_EDIT,
+  expense,
+});
+
 export const fetchExchangeRate = (value) => async (dispatch) => {
   try {
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
     const data = await response.json();
     value.exchangeRates = data;
-    const ask = data[value.currency];
-    const convertion = (Number(value.value).toFixed(2)) * ask.ask;
-    dispatch(attTotal(convertion));
     dispatch(expenseArray(value));
   } catch (error) {
     console.error('Um erro aconteceu na requisicão', error);
