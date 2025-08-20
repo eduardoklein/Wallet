@@ -9,8 +9,6 @@ Este projeto é uma aplicação de controle financeiro pessoal desenvolvida em R
 - [Tecnologias](#tecnologias)
 - [Instalação](#instalação)
 - [Como usar](#como-usar)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
 
 ## Sobre
 
